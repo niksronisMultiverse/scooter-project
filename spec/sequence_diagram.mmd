@@ -1,0 +1,53 @@
+sequenceDiagram
+
+    Actor User
+
+    User ->> ScooterApp: Register as new user
+    activate ScooterApp
+    ScooterApp -->> User: Enter registration info
+    ScooterApp -->> User: Check if registration is valid
+    deactivate ScooterApp
+
+    Scooter ->> ScooterApp: Add a new scooter
+    activate ScooterApp
+    ScooterApp -->> Scooter: Scooter added
+    deactivate ScooterApp
+
+    Scooter ->> ScooterApp: Remove a scooter
+    activate ScooterApp
+    ScooterApp -->> Scooter: Scooter removed
+    deactivate ScooterApp
+
+
+    User ->> ScooterApp: Login
+    activate ScooterApp
+    ScooterApp -->> User: Enter Login details
+    alt Failed login
+        ScooterApp ->> User: Invalid login
+        deactivate ScooterApp
+
+    else Successful login
+        ScooterApp ->> User: Logged in
+        deactivate ScooterApp
+    end
+
+    User ->> ScooterApp: Rent a scooter
+    activate ScooterApp
+    alt Successful rent
+        ScooterApp ->> Scooter: Remove from location
+        ScooterApp -->> User: Scooter rented successfully
+        deactivate ScooterApp
+        User ->> ScooterApp: Dock at station
+        activate ScooterApp
+        Scooter ->> ScooterApp: Dock at station
+        ScooterApp -->> User: Docked successfully
+    else Scooter needs repairs
+        Scooter ->> ScooterApp: Scooter needs repairs
+        ScooterApp ->> User: Scooter needs repairs
+        deactivate ScooterApp
+    end
+    opt Scooter is out of battery
+        Scooter ->> ScooterApp: Scooter needs to be charged
+        ScooterApp ->> User: Scooter needs to be charged
+        deactivate ScooterApp
+    end
